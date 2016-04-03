@@ -1,9 +1,10 @@
 {
   "name": "whoa-nelly",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
-  "bin": "cli.js",
+  "bin": {
+    "whoa-nelly": "cli.js"
+  },
   "author": "Aria Stewart <aredridel@dinhe.net>",
   "license": "ISC",
   "dependencies": {
@@ -11,5 +12,14 @@
     "node-fetch": "^1.4.1",
     "verror": "^1.6.1",
     "yargs": "^4.3.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lgbtq-technology/whoa-nelly.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lgbtq-technology/whoa-nelly/issues"
+  },
+  "homepage": "https://github.com/lgbtq-technology/whoa-nelly#readme",
+  "description": "A tool to get a user out of channels in slack and tell them to cool their jets"
 }
