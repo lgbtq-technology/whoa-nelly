@@ -12,10 +12,9 @@ if (!process.env.WEBHOOK_TOKEN) {
 
 http.createServer(function (req, res) {
     bodyParser(req, res, function(err, body) {
-        console.warn(body);
         if (body.token != process.env.WEBHOOK_TOKEN) {
             res.statusCode = 500;
-            console.warn("token mismatch. Expected %j, got %j", process.env.WEBHOOK_TOKEN, body.token);
+            console.warn("%s token mismatch. Expected %j, got %j", new Date(), process.env.WEBHOOK_TOKEN, body.token);
             res.end('invalid token');
         } else {
 
@@ -23,16 +22,15 @@ http.createServer(function (req, res) {
             if (!user) {
                 res.end("you must give a username");
             } else {
-                console.warn("whoa on %j by %j", user, body.user_name);
-                whoa(user).then(result => {
-                    res.end(result || "whoa sent!");
-                    if (result) console.log(result);
+                console.warn("%s whoa on %j by %j", new Date(), user, body.user_name);
+                whoa(user, body).then(result => {
+                    res.end("Whoa sent");
+                    console.log("%s result %j", new Date(), result);
                 }, err => {
-                    console.warn(err.stack);
+                    console.warn("%s %s", new Date(), err.stack);
                     res.end('something went wrong. Eek. Time to /admin?');
                 });
             }
         }
     });
 }).listen(process.env.PORT)
-

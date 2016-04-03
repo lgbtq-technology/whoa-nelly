@@ -8,7 +8,7 @@ const argv = yargs.option('user', {
     nargs: 1
 }).argv;
 
-Promise.resolve().then(() => require('./')).then(whoa => whoa(argv.user)).then(result => {
+Promise.resolve().then(() => require('./')).then(whoa => whoa(argv.user, {user_name: '...command line'})).then(result => {
     if (result) console.log(result);
 }, err => {
     console.warn(err.stack);
