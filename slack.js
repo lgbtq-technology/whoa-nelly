@@ -9,7 +9,13 @@ if (!process.env.SLACK_TOKEN) {
 
 var slack = module.exports = {
     users: {
-        getByName: name => slack.users.list().then(list => list.members.find(e => e.name == name)),
+        getByName: name => slack.users.list().then(list => list.members.find(e => e.name == stripName(name))).then(u => {
+            if (u && u.id) {
+                return u;
+            } else {
+                throw new Error("User not found");
+            }
+        }),
         list: () => slackFetch(`https://slack.com/api/users.list`)
     },
     chat: {
@@ -24,6 +30,10 @@ var slack = module.exports = {
         open: user => slackFetch(`https://slack.com/api/im.open`, { user })
     }
 };
+
+function stripName(name) {
+    return name[0] == '@' ? name.slice(1) : name;
+}
 
 function slackFetch(url, args) {
     debug('fetching %j %j', url, args);

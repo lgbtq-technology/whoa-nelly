@@ -8,6 +8,7 @@
   "author": "Aria Stewart <aredridel@dinhe.net>",
   "license": "ISC",
   "dependencies": {
+    "body": "^5.1.0",
     "mz": "^2.4.0",
     "node-fetch": "^1.4.1",
     "verror": "^1.6.1",
