@@ -2,16 +2,23 @@ const fetch = require('node-fetch');
 const debug = require('util').debuglog('whoa-nelly');
 const qs = require('querystring');
 const VError = require('verror');
+const fs = require('mz/fs');
+const path = require('path');
 
 if (!process.env.SLACK_TOKEN) {
     throw new Error("SLACK_TOKEN must exist in the environment");
 }
 
+const message = fs.readFile(path.resolve(__dirname, 'whoa-message.md'), 'utf-8');
+
 module.exports = function whoa(user) {
     return slack.users.getByName(user).then(user => slack.channels.list()
-                .then(l => l.channels.filter(c => c.members.indexOf(user.id) >= 0 && !c.is_general))
-                .then(channels => Promise.all(channels.map(c => slack.channels.kick(c.id, user.id)))))
-
+        .then(l => l.channels.filter(c => c.members.indexOf(user.id) >= 0 && !c.is_general))
+        .then(channels => Promise.all([
+            message.then(m => slack.im.open(user.id).then(im => slack.chat.postMessage(im.channel.id, m, {
+                                                                                      username: 'adminbot',
+                                                                                      icon_emoji: ':exclamation:'}))),
+        ].concat(channels.map(c => slack.channels.kick(c.id, user.id))))))
 }
 
 function slackFetch(url, args) {
@@ -36,9 +43,15 @@ const slack = {
         getByName: name => slack.users.list().then(list => list.members.find(e => e.name == name)),
         list: () => slackFetch(`https://slack.com/api/users.list`)
     },
+    chat: {
+        postMessage: (channel, text, opts) => slackFetch(`https://slack.com/api/chat.postMessage`, Object.assign({ channel, text }, opts))
+    },
     channels: {
         list: () => slackFetch(`https://slack.com/api/channels.list`),
         kick: (channel, user) => slackFetch(`https://slack.com/api/channels.kick`, { channel, user }),
         info: channel => slackFetch(`https://slack.com/api/channels.info`, { channel })
+    },
+    im: {
+        open: user => slackFetch(`https://slack.com/api/im.open`, { user })
     }
 };
