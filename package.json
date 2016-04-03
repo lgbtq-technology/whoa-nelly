@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "bin": "cli.js",
+  "author": "Aria Stewart <aredridel@dinhe.net>",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^1.4.1"
+    "node-fetch": "^1.4.1",
+    "verror": "^1.6.1",
+    "yargs": "^4.3.2"
   }
 }
