@@ -12,7 +12,10 @@ module.exports = function whoa(user, context) {
     const boticon = process.env.BOT_ICON || 'https://raw.githubusercontent.com/lgbtq-technology/whoa-nelly/master/adminbot-48x48.jpeg';
     const notification = fmt("Whoa on %j by %s", user, context.user_name) + (context.channel_name ? fmt(" in %s", context.channel_name) : "");
 
-    return Promise.resolve(notify && slack.chat.postMessage(notify, notification, { username: botname }))
+    return Promise.resolve(notify && slack.chat.postMessage(notify, notification, {
+                                                                username: botname,
+                                                                icon_url: boticon
+                                                            }))
         .then(() => slack.users.getByName(user).then(user => slack.channels.list()
         .then(l => l.channels.filter(c => c.members.indexOf(user.id) >= 0 && !c.is_general))
         .then(channels => Promise.all([
