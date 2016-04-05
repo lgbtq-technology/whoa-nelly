@@ -8,15 +8,17 @@ const slack = require('./slack');
 
 module.exports = function whoa(user, context) {
     const notify = process.env.NOTIFY_CHANNEL;
+    const botname = process.env.BOT_NAME || 'friendly_admin_bot';
+    const boticon = process.env.BOT_ICON || ':adminbot:';
     const notification = fmt("Whoa on %j by %s", user, context.user_name) + (context.channel_name ? fmt(" in %s", context.channel_name) : "");
 
-    return Promise.resolve(notify && slack.chat.postMessage(notify, notification, { username: 'adminbot' }))
+    return Promise.resolve(notify && slack.chat.postMessage(notify, notification, { username: botname }))
         .then(() => slack.users.getByName(user).then(user => slack.channels.list()
         .then(l => l.channels.filter(c => c.members.indexOf(user.id) >= 0 && !c.is_general))
         .then(channels => Promise.all([
             message.then(m => slack.im.open(user.id).then(im => slack.chat.postMessage(im.channel.id, m, {
-                                                                                      username: 'adminbot',
-                                                                                      icon_emoji: ':exclamation:'}))),
+                                                                                      username: botname,
+                                                                                      icon_emoji: boticon }))),
         ].concat(channels.map(c => slack.channels.kick(c.id, user.id)))))))
         .then(() => "Whoa sent!")
 }
