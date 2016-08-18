@@ -12,7 +12,7 @@
     "mz": "^2.4.0",
     "node-fetch": "^1.6.0",
     "verror": "^1.8.1",
-    "yargs": "^4.8.1"
+    "yargs": "^5.0.0"
   },
   "repository": {
     "type": "git",
